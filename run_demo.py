@@ -25,7 +25,7 @@ def run_demo():
                         help='Input WAV file')
     parser.add_argument('--sample_rate_hz', default=8000, type=int,
                         help='Sample rate in Hz')
-    parser.add_argument('--fft_size', default=512, type=int,
+    parser.add_argument('--fft_size', default=256, type=int,
                         help='FFT siz')
     parser.add_argument('--iterations', default=1000, type=int,
                         help='Number of iterations to run')
@@ -33,7 +33,7 @@ def run_demo():
                         help='Apply a low-pass filter', default=True)
     parser.add_argument('--enable_mel_scale', action='store_true',
                         help='Convert to mel scale and back', default=True)
-    parser.add_argument('--cutoff_freq', type=int, default=2000,
+    parser.add_argument('--cutoff_freq', type=int, default=3000,
                         help='If filter is enable, the low-pass cutoff frequency in Hz')
     args = parser.parse_args()
 
@@ -82,8 +82,8 @@ def run_demo():
     # If the mel scale option is selected, apply a perceptual frequency scale.
     if args.enable_mel_scale:
         min_freq_hz = 300
-        max_freq_hz = 2000
-        mel_bin_count = 65
+        max_freq_hz = 3000
+        mel_bin_count = 70
 
         linear_bin_count = 1 + args.fft_size//2
         filterbank = audio_utilities.make_mel_filterbank(min_freq_hz, max_freq_hz, mel_bin_count,
