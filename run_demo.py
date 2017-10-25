@@ -25,7 +25,7 @@ def run_demo():
                         help='Input WAV file')
     parser.add_argument('--sample_rate_hz', default=8000, type=int,
                         help='Sample rate in Hz')
-    parser.add_argument('--fft_size', default=4096, type=int,
+    parser.add_argument('--fft_size', default=512, type=int,
                         help='FFT siz')
     parser.add_argument('--iterations', default=1000, type=int,
                         help='Number of iterations to run')
