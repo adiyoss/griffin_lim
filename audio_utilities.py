@@ -158,7 +158,7 @@ def make_mel_filterbank(min_freq_hz, max_freq_hz, mel_bin_count,
             else:
                 # Start ramping up from the previous center frequency bin.
                 left_bin = linear_bin_indices[mel_bin - 1]
-            for f_bin in range(left_bin, center_freq_linear_bin+1):
+            for f_bin in range(int(left_bin), int(center_freq_linear_bin)+1):
                 if (center_freq_linear_bin - left_bin) > 0:
                     response = float(f_bin - left_bin)/float(center_freq_linear_bin - left_bin)
                     filterbank[mel_bin, f_bin] = response
@@ -172,11 +172,11 @@ def make_mel_filterbank(min_freq_hz, max_freq_hz, mel_bin_count,
                 right_bin = min(linear_bin_count - 1, fft_bin_stop)
             else:
                 right_bin = linear_bin_indices[mel_bin + 1]
-            for f_bin in range(center_freq_linear_bin, right_bin+1):
+            for f_bin in range(int(center_freq_linear_bin), int(right_bin)+1):
                 if (right_bin - center_freq_linear_bin) > 0:
                     response = float(right_bin - f_bin)/float(right_bin - center_freq_linear_bin)
                     filterbank[mel_bin, f_bin] = response
-        filterbank[mel_bin, center_freq_linear_bin] = 1.0
+        filterbank[int(mel_bin), int(center_freq_linear_bin)] = 1.0
 
     return  filterbank
 

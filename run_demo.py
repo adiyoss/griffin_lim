@@ -21,19 +21,19 @@ def run_demo():
         A plot of the spectrogram is also displayed.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--in_file', type=str, default="bkvhi.wav",
+    parser.add_argument('--in_file', type=str, default="input.wav",
                         help='Input WAV file')
-    parser.add_argument('--sample_rate_hz', default=44100, type=int,
+    parser.add_argument('--sample_rate_hz', default=8000, type=int,
                         help='Sample rate in Hz')
-    parser.add_argument('--fft_size', default=2048, type=int,
+    parser.add_argument('--fft_size', default=512, type=int,
                         help='FFT siz')
     parser.add_argument('--iterations', default=300, type=int,
                         help='Number of iterations to run')
     parser.add_argument('--enable_filter', action='store_true',
-                        help='Apply a low-pass filter')
+                        help='Apply a low-pass filter', default=True)
     parser.add_argument('--enable_mel_scale', action='store_true',
-                        help='Convert to mel scale and back')
-    parser.add_argument('--cutoff_freq', type=int, default=1000,
+                        help='Convert to mel scale and back', default=True)
+    parser.add_argument('--cutoff_freq', type=int, default=4000,
                         help='If filter is enable, the low-pass cutoff frequency in Hz')
     args = parser.parse_args()
 
@@ -67,6 +67,8 @@ def run_demo():
     # We now have a (magnitude only) spectrogram, `stft_mag` that is normalized to be within [0, 1.0].
     # In a practical use case, we would probably want to perform some processing on `stft_mag` here
     # which would produce a modified version that we would want to reconstruct audio from.
+    
+    '''
     figure(1)
     imshow(stft_mag.T**0.125, origin='lower', cmap=cm.hot, aspect='auto',
            interpolation='nearest')
@@ -75,17 +77,18 @@ def run_demo():
     xlabel('time index')
     ylabel('frequency bin index')
     savefig('unmodified_spectrogram.png', dpi=150)
-
+    '''
 
     # If the mel scale option is selected, apply a perceptual frequency scale.
     if args.enable_mel_scale:
-        min_freq_hz = 70
-        max_freq_hz = 8000
-        mel_bin_count = 200
+        min_freq_hz = 30
+        max_freq_hz = 4000
+        mel_bin_count = 65
 
         linear_bin_count = 1 + args.fft_size//2
         filterbank = audio_utilities.make_mel_filterbank(min_freq_hz, max_freq_hz, mel_bin_count,
-                                                         linear_bin_count , args.sample_rate_hz)
+                                                         int(linear_bin_count) , int(args.sample_rate_hz))
+        '''
         figure(2)
         imshow(filterbank, origin='lower', cmap=cm.hot, aspect='auto',
                interpolation='nearest')
@@ -94,10 +97,12 @@ def run_demo():
         xlabel('linear frequency index')
         ylabel('mel frequency index')
         savefig('mel_scale_filterbank.png', dpi=150)
-
+        '''
         mel_spectrogram = np.dot(filterbank, stft_mag.T)
 
+        '''
         clf()
+        
         figure(3)
         imshow(mel_spectrogram**0.125, origin='lower', cmap=cm.hot, aspect='auto',
                interpolation='nearest')
@@ -106,9 +111,10 @@ def run_demo():
         xlabel('time index')
         ylabel('mel frequency bin index')
         savefig('mel_scale_spectrogram.png', dpi=150)
-
+        '''
         inverted_mel_to_linear_freq_spectrogram = np.dot(filterbank.T, mel_spectrogram)
-
+        
+        '''
         clf()
         figure(4)
         imshow(inverted_mel_to_linear_freq_spectrogram**0.125, origin='lower', cmap=cm.hot, aspect='auto',
@@ -118,6 +124,7 @@ def run_demo():
         xlabel('time index')
         ylabel('frequency bin index')
         savefig('inverted_mel_to_linear_freq_spectrogram.png', dpi=150)
+        '''
 
         stft_modified = inverted_mel_to_linear_freq_spectrogram.T
 
@@ -146,7 +153,8 @@ def run_demo():
 
     # Save the reconstructed signal to a WAV file.
     audio_utilities.save_audio_to_file(x_reconstruct, args.sample_rate_hz)
-
+    
+    '''
     # Save the spectrogram image also.
     clf()
     figure(5)
@@ -157,7 +165,7 @@ def run_demo():
     xlabel('time index')
     ylabel('frequency bin index')
     savefig('reconstruction_spectrogram.png', dpi=150)
-
+    '''
 
 if __name__ == '__main__':
     run_demo()
