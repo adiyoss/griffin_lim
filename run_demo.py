@@ -33,7 +33,7 @@ def run_demo():
                         help='Apply a low-pass filter', default=True)
     parser.add_argument('--enable_mel_scale', action='store_true',
                         help='Convert to mel scale and back', default=True)
-    parser.add_argument('--cutoff_freq', type=int, default=4000,
+    parser.add_argument('--cutoff_freq', type=int, default=2000,
                         help='If filter is enable, the low-pass cutoff frequency in Hz')
     args = parser.parse_args()
 
@@ -82,7 +82,7 @@ def run_demo():
     # If the mel scale option is selected, apply a perceptual frequency scale.
     if args.enable_mel_scale:
         min_freq_hz = 300
-        max_freq_hz = 4000
+        max_freq_hz = 2000
         mel_bin_count = 65
 
         linear_bin_count = 1 + args.fft_size//2
